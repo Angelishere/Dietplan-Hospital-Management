@@ -1,0 +1,325 @@
+from tabulate import tabulate
+import mysql.connector as ms
+mycon=ms.connect(host='localhost',user='root',passwd='1234',database='comp
+any')
+if mycon.is_connected():
+ print('Successfully created')
+mycursor=mycon.cursor()
+m="create table patient"
+k="create table patientfeedback"
+j="create table dietplan"
+mycursor.execute(m)
+mycursor.execute(k)
+mycursor.execute(j)
+mycon.commit()
+
+
+def add1():
+ z='y'
+ while z=='y' or z=='Y':
+ a=int(input("\033[1;30;46m Enter the patient's ID : "))
+ b=input("\033[1;30;46m Enter the patient's name : ")
+ c=int(input("\033[1;30;46m Enter the age : "))
+ d=input("\033[1;30;46m Enter the sex f/m : ")
+ e=input("\033[1;30;46m Enter the medical condition : ")
+ f=input("\033[1;30;46m Enter if any secondary medical condition : ")
+ g=input("\033[1;30;46m Enter the diet plan: ")
+ h=int(input("\033[1;30;46m Enter the dietitian's ID : "))
+ i=input("\033[1;30;46m Enter the dietitian's name : ")
+ ins="insert into patient
+values({},'{}',{},'{}','{}','{}','{}',{},'{}')".format(a,b,c,d,e,f,g,h,i)
+ mycursor.execute(ins)
+ mycon.commit()
+ z=input("\033[1;30;46m ENTER Y TO CONTINUE ADDING VALUES OR N TO
+VIEW THE MENU ")
+def add2():
+ x='y'
+ while x=='y' or x=='Y':
+ a=int(input("\033[1;30;46m Enter the patient's ID : "))
+ b=input("\033[1;30;46m Enter the food for breakfast : ")
+ c=input("\033[1;30;46m Enter the food for lunch : ")
+ d=input("\033[1;30;46m Enter the food for dinner : ")
+ ins="insert into dietplan values({},'{}','{}','{}')".format(a,b,c,d)
+ mycursor.execute(ins)
+ mycon.commit()
+ x=input("\033[1;30;46m ENTER Y TO CONTINUE ADDING VALUES OR N TO
+VIEW THE MENU ")
+def add3():
+ u='y'
+ while u=='y' or u=='Y':
+ a=int(input("\033[1;30;46m Enter the patient ID "))
+ b=input("\033[1;30;46m Enter the feedback : ")
+ ins="\033[1;30;46m insert into patientfeedback values({},'{}')".format(a,b)
+ mycursor.execute(ins)
+ mycon.commit()
+ u=input("\033[1;30;46m ENTER Y TO CONTINUE ADDING VALUES OR N TO
+VIEW THE MENU ")
+def display1():
+ mycursor.execute("select * from patient")
+ disp=mycursor.fetchall()
+ print("\033[1;30;46m 1. Display the entire information in a table: ")
+ print("\033[1;30;46m 2. Display each information specifically: ")
+ ch=int(input("\033[1;30;46m Enter your choice :"))
+
+print("_____________________________________________________________
+____________________________________________")
+ if ch==1:
+ for i in disp:
+ print("\033[1;30;42m PATIENT ID : ",i[0])
+ print()
+ print("\033[1;30;42m PATIENT's NAME : ",i[1])
+ print()
+ print("\033[1;30;42m PATIENT's AGE : ",i[2])
+ print()
+ print("\033[1;30;42m PATIENT's GENDER : ",i[3])
+ print()
+ print("\033[1;30;42m MEDICAL CONDITION : ",i[4])
+ print()
+ print("\033[1;30;42m SECONDARY MEDICAL CONDITION : ",i[5])
+ print()
+ print("\033[1;30;42m DIET PLAN RECOMMENDED : ",i[6])
+ print()
+ print("\033[1;30;42m DIETITIAN ID : ",i[7])
+ print()
+ print("\033[1;30;42m DIETITIAN's NAME : ",i[8])
+ print()
+
+print("_____________________________________________________________
+______________________________________")
+
+print("_____________________________________________________________
+______________________________________")
+ print()
+ elif ch==2:
+ print(tabulate(disp,tablefmt='grid'))
+
+def display2():
+ mycursor.execute("select * from dietplan")
+ disp=mycursor.fetchall()
+ print("\033[1;30;46m 1. Display the entire information in a table: ")
+ print("\033[1;30;46m 2. Display each information specifically: ")
+ ch=int(input("\033[1;30;46m Enter your choice :"))
+
+print("_____________________________________________________________
+____________________________________________")
+ if ch==1:
+ for i in disp:
+ print("\033[1;30;42m PATIENT ID : ",i[0])
+ print()
+ print("\033[1;30;42m FOOD FOR BREAKFAST : ",i[1])
+ print()
+ print("\033[1;30;42m FOOD FOR LUNCH : ",i[2])
+ print()
+ print("\033[1;30;42m FOOD FOR DINNER : ",i[3])
+ print()
+
+print("_____________________________________________________________
+______________________________________")
+
+print("_____________________________________________________________
+______________________________________")
+ print()
+ elif ch==2:
+ print(tabulate(disp,tablefmt='grid'))
+
+def display3():
+ mycursor.execute("select * from patientfeedback")
+ disp=mycursor.fetchall()
+ print("\033[1;30;46m 1. Display the entire information in a table: ")
+ print("\033[1;30;46m 2. Display each information specifically: ")
+ ch=int(input("\033[1;30;46m Enter your choice :"))
+
+print("_____________________________________________________________
+____________________________________________")
+ if ch==1:
+ for i in disp:
+ print("\033[1;30;42m PATIENT ID : ",i[0])
+ print()
+ print("\033[1;30;42m FEEDBACK : ",i[1])
+ print()
+
+print("_____________________________________________________________
+______________________________________")
+
+print("_____________________________________________________________
+______________________________________")
+ print()
+ elif ch==2:
+ print(tabulate(disp,tablefmt='grid'))
+
+
+def update1():
+ d=int(input("\033[1;30;46m Enter the patient ID whose diet plan needs to be
+updated : "))
+ p=input("\033[1;30;46m Enter the new diet plan of the patient : ")
+ que="update patient set DIET_RECOMMENDATION='{}' where
+PATIENT_ID={}".format(p,d)
+ mycursor.execute(que)
+ mycon.commit()
+ print("Successfully created")
+
+def update2():
+ n=int(input("\033[1;30;46m Enter the patient ID whose age needs to be
+updated : "))
+ pl=int(input("\033[1;30;46m Enter the new age of patient : "))
+ que="update patient set AGE={} where PATIENT_ID={}".format(pl,n)
+ mycursor.execute(que)
+ mycon.commit()
+ print("Successfully created")
+def search():
+ print("\033[1;30;46m 1. search based on patient ID ")
+ print("\033[1;30;46m 2. search based on gender ")
+ print("\033[1;30;46m 3. search based on medical condition ")
+ ch=int(input("\033[1;30;46m Enter your choice :"))
+
+print("_____________________________________________________________
+____________________________________________")
+
+ if ch==1:
+ pno=int(input('\033[1;30;46m Enter the patient ID : '))
+ que="select * from patient where PATIENT_ID={}".format(pno)
+ mycursor.execute(que)
+ disp=mycursor.fetchall()
+ print(disp)
+ mycon.commit
+
+ elif ch==2:
+ bna=input("\033[1;30;46m Enter the gender (m/f) : ")
+ que="select * from patient where sex='{}'".format(bna)
+ mycursor.execute(que)
+ disp=mycursor.fetchall()
+ print(disp)
+ mycon.commit
+
+ elif ch==3:
+ ty=input("\033[1;30;46m Enter the medical condition : ")
+ que="select * from patient where medical condition='{}'".format(ty)
+ mycursor.execute(que)
+ disp=mycursor.fetchall()
+ print(disp)
+ mycon.commit
+
+def delete1():
+ r=int(input("\033[1;30;46m Enter the patient's ID whose records need to be
+deleted : "))
+ w="delete from dietplan where PATIENT_ID={}".format(r)
+ t="delete from patientfeedback where PATIENT_ID={}".format(r)
+ qu="delete from patient where PATIENT_ID={}".format(r)
+ mycursor.execute(w)
+ mycursor.execute(t)
+ mycursor.execute(qu)
+ mycon.commit()
+ print("successfully deleted")
+
+
+ans="y"
+while ans=="y" or ans=="Y":
+
+ print()
+ print()
+ print(" _____ _____ ______ ________ __________
+________ ")
+ print(" | \ | | | | | | | | |\ |
+")
+ print(" | | | | | | | | | | | \ |
+")
+ print(" | | | |____ | |________| | |______| |
+\ | ")
+ print(" | | | | | | | | | | \ |
+")
+ print(" | / | | | | | | | | \ |
+")
+ print(" |___/ _|__ |_____ | | |_________ | | |
+\| ")
+ print()
+ print(" ________________________________
+________________________________________________
+")
+ print(" ________________________________
+________________________________________________
+")
+ print()
+ print("\033[1;30;43m 1. TO ADD ENTRIES~")
+ print()
+ print("\033[1;30;43m 2. TO DISPLAY ENTRIES~")
+ print()
+ print("\033[1;30;43m 3. TO UPDATE ENTRIES~")
+ print()
+ print("\033[1;30;43m 4. TO SEARCH ENTRIES~")
+ print()
+ print("\033[1;30;43m 5. TO DELETE ENTRIES~")
+ print()
+ ch=int(input("\033[1;30;46m Enter your choice : "))
+ print()
+
+print("_____________________________________________________________
+____________________________________________________")
+
+ if ch==1:
+ print("\033[1;30;43m A. ADD ENTRY AS AN ADMIN : ")
+ print()
+ print("\033[1;30;43m B. ADD ENTRY AS A DIETITIAN : ")
+ print()
+ print("\033[1;30;43m C. ADD ENTRY AS A PATIENT TO PROVIDE FEEDBACK :
+")
+ print()
+ sel=input("\033[1;30;46m Enter option A , B OR C : ")
+ print()
+
+print("_____________________________________________________________
+____________________________________________________")
+ if sel=='A' or sel=='a':
+ add1()
+ elif sel=='B' or sel=='b':
+ add2()
+ elif sel=='C' or sel=='c':
+ add3()
+
+ elif ch==2:
+ print("\033[1;30;43m A. DISPLAY ALL THE RECORDS OF PATIENTS : ")
+ print()
+ print("\033[1;30;43m B. DISPLAY ALL RECORDS OF PATIENT DIET : ")
+ print()
+ print("\033[1;30;43m C. DISPLAY ALL RECORDS OF FEEDBACK : ")
+ print()
+ sel=input("\033[1;30;46m Enter option A , B OR C : ")
+ print()
+
+print("_____________________________________________________________
+__________________________________________________")
+
+ if sel=='A' or sel=='a':
+ display1()
+ elif sel=='B' or sel=='b':
+ display2()
+ elif sel=='C' or sel=='c':
+ display3()
+
+ elif ch==3:
+ print("\033[1;30;43m A. UPDATE THE DIET PLAN OF PATIENT : ")
+ print()
+ print("\033[1;30;43m B. TO UPDATE AGE OF PATIENT : ")
+ print()
+ cho=input("\033[1;30;46m Enter option A OR B : ")
+ print()
+
+print("_____________________________________________________________
+__________________________________________________")
+
+ if cho=='A' or cho=='a':
+ update1()
+ elif cho=='B' or cho=='b':
+ update2()
+
+ elif ch==4:
+ search()
+
+ elif ch==5:
+ delete1()
+
+ else:
+ print("\033[1;37;41m Wrong choice!!!")
+
+ ans=input("\033[1;30;46m ENTER Y IF YOU WANT TO VIEW THE MENU OR N
+TO STOP : ")
+ print()
